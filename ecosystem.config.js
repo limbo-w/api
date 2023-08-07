@@ -2,8 +2,8 @@ module.exports = {
     apps: [
         {
             name: 'goflash-api',
-            cwd: './api',
-            script: 'main.js -p 3101',
+            cwd: './dist',
+            script: './main.js',
             autorestart: true,
             watch: true,
             ignore_watch: ['node_modules'],
