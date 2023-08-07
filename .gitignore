@@ -1,0 +1,77 @@
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# dependencies
+node_modules
+**/node_modules
+.pnp
+.pnp.js
+uploads
+config.yml
+
+# testing
+coverage
+.nyc_output
+.history
+back
+
+# roadhog-api-doc ignore
+/admin/src/utils/request-temp.js
+_roadhog-api-doc
+
+
+# compiled output
+.next/
+out/
+build
+dist
+
+# misc
+.DS_Store
+*.pem
+
+back
+# debug
+npm-debug.log*
+logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+
+# local env files
+.env
+.env.*
+
+# turbo
+.turbo
+
+# vercel
+.vercel
+
+# IDEs and editors
+/.idea
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-workspace
+
+
+# typescript
+*.tsbuildinfo
+next-env.d.ts
+
+# umi
+.umi
+.umi-production
+
+
+# screenshot
+screenshot
+.firebase
+.eslintcache
+
+build

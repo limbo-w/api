@@ -1,0 +1,141 @@
+import { Injectable, UseFilters, UsePipes } from '@nestjs/common';
+import {
+    ConnectedSocket,
+    MessageBody,
+    SubscribeMessage,
+    WebSocketGateway,
+    WebSocketServer,
+    WsException,
+} from '@nestjs/websockets';
+import type { WsResponse } from '@nestjs/websockets';
+import { instanceToPlain } from 'class-transformer';
+import { isNil } from 'lodash';
+import WebSocket from 'ws';
+
+import { WsExceptionFilter, WsPipe } from '@/modules/core/providers';
+
+import { DealService } from '@/modules/shop/services';
+
+import { AccessTokenEntity } from '@/modules/user/entities';
+
+import { TokenService } from '@/modules/user/services';
+
+import { WSAuthDto, WSDealPushDto } from '../dtos';
+
+import { PushDealJob } from '../queue/push-deal.job';
+
+// type User = Pick<ClassToPlain<UserEntity>, 'id' | 'username' | 'nickname' | 'phone' | 'email'>;
+interface Onliner {
+    client: WebSocket;
+    token: AccessTokenEntity;
+}
+
+// const permissionChecker: PermissionChecker = async (ab) =>
+//     ab.can(PermissionAction.MANAGE, DealEntity.name);
+/**
+ * Websocket网关
+ */
+@Injectable()
+@WebSocketGateway(8888)
+@UseFilters(new WsExceptionFilter())
+@UsePipes(
+    new WsPipe({
+        transform: true,
+        forbidUnknownValues: true,
+        validationError: { target: false },
+    }),
+)
+export class DealPushGateway {
+    constructor(
+        protected tokenService: TokenService,
+        protected dealService: DealService,
+        protected job: PushDealJob,
+    ) {}
+
+    protected _onliners: Onliner[] = [];
+
+    get onLiners() {
+        return this._onliners;
+    }
+
+    @WebSocketServer()
+    server!: WebSocket.Server;
+
+    // @UseGuards(RbacWsGuard)
+    // @Permission(permissionChecker)
+    @SubscribeMessage('online')
+    async onLine(
+        @MessageBody() data: WSAuthDto,
+        @ConnectedSocket() client: WebSocket,
+    ): Promise<WsResponse<Record<string, any>>> {
+        const token = (await this.tokenService.checkAccessToken(data.token))!;
+        const onliner = { token, user: token.user, client };
+        this._onliners.push(onliner);
+        return {
+            event: 'online',
+            data: {},
+        };
+    }
+
+    // @UseGuards(RbacWsGuard)
+    // @Permission(permissionChecker)
+    @SubscribeMessage('message')
+    async push(
+        @MessageBody()
+        data: WSDealPushDto,
+    ): Promise<any> {
+        const deal = await this.getMessager(data);
+        this.job.push({ deal: deal.id });
+        // 向在线用户发送消息
+        this._onliners.forEach(({ client }) =>
+            client.send(
+                JSON.stringify({
+                    event: 'message',
+                    message: instanceToPlain(deal),
+                }),
+            ),
+        );
+        return undefined;
+    }
+
+    // @UseGuards(RbacWsGuard)
+    // @Permission(permissionChecker)
+    @SubscribeMessage('offline')
+    async offLine(
+        @MessageBody() data: WSAuthDto,
+        @ConnectedSocket() client: WebSocket,
+    ): Promise<WsResponse<Record<string, any>>> {
+        const token = (await this.tokenService.checkAccessToken(data.token))!;
+        const onliner = this.onLiners.find(({ token: t }) => t.id === token.id);
+        if (!isNil(onliner)) await this.offlineHandler(onliner);
+        return {
+            event: 'offline',
+            data: {},
+        };
+    }
+
+    @SubscribeMessage('exception')
+    sendException(
+        @MessageBody()
+        data: {
+            status: string;
+            message: any;
+        },
+    ): WsResponse<Record<string, any>> {
+        return { event: 'exception', data };
+    }
+
+    protected async offlineHandler({ token }: Onliner) {
+        this._onliners = this._onliners.filter((o) => o.token !== token);
+    }
+
+    protected async getMessager(data: WSDealPushDto) {
+        const deal = this.dealService.detail(data.id);
+        const token = await this.tokenService.checkAccessToken(data.token);
+        // 判断发送者是否上线,必须处于上线状态才能发送消息
+        if (isNil(this._onliners.find((o) => o.token.id === token.id))) {
+            throw new WsException('You are not on line');
+        }
+        return deal;
+    }
+}
