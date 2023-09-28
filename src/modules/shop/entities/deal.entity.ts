@@ -135,6 +135,6 @@ export class DealEntity extends BaseEntity {
 
     @AfterLoad()
     async generateIsExpired() {
-        this.isExpired = this.endedAt < new Date();
+        this.isExpired = new Date(this.endedAt) < new Date();
     }
 }
