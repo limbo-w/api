@@ -12,6 +12,7 @@ import {
     OneToOne,
     PrimaryGeneratedColumn,
     UpdateDateColumn,
+    AfterLoad,
 } from 'typeorm';
 
 import { MediaEntity } from '@/modules/media/entities';
@@ -68,6 +69,9 @@ export class DealEntity extends BaseEntity {
         nullable: true,
     })
     endedAt!: Date;
+
+    @Expose()
+    isExpired: boolean;
 
     @Expose()
     @Column({ comment: 'deals keywords', type: 'simple-array', nullable: true })
@@ -128,4 +132,9 @@ export class DealEntity extends BaseEntity {
     @Expose()
     @OneToOne(() => PushedEntity, (pushed) => pushed.deal, { nullable: true })
     pushed: PushedEntity | null;
+
+    @AfterLoad()
+    async generateIsExpired() {
+        this.isExpired = this.endedAt < new Date();
+    }
 }
