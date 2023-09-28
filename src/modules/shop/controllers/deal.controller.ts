@@ -13,6 +13,9 @@ import { QueryDealDto } from '../dtos';
 import { DealService } from '../services';
 import { ShopModule } from '../shop.module';
 
+import {SelectQueryBuilder} from 'typeorm';
+import { DealEntity } from '../entities';
+
 @ApiTags('商品操作')
 @Depends(ShopModule)
 @Controller('deals')
@@ -32,7 +35,9 @@ export class DealController {
             'limit',
             'search',
         ]);
-        return this.dealService.paginate(options);
+        return this.dealService.paginate(options, async (query: SelectQueryBuilder<DealEntity>) => {
+            return query.andWhere('endedAt >= :now', {now: new Date()});
+        });
     }
 
     @Patch('favorite/:id')
