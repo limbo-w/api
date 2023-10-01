@@ -250,9 +250,9 @@ export abstract class BaseService<
         console.log(options);
         const sort = JSON.parse(options.sort);
         if (!isNil(sort)) {
-            sort.forEach((v: string, k: string) => {
-                qb.addOrderBy(k, v === 'ascend' ? 'ASC' : 'DESC');
-            });
+            for (let k in sort) {
+                qb.addOrderBy(k, sort[k] === 'ascend' ? 'ASC' : 'DESC');
+            }
         }
 
         if (callback) return callback(qb);
