@@ -251,7 +251,7 @@ export abstract class BaseService<
         const sort = JSON.parse(options.sort);
         if (!isNil(sort)) {
             for (let k in sort) {
-                qb.addOrderBy(k, sort[k] === 'ascend' ? 'ASC' : 'DESC');
+                qb.addOrderBy(`${queryName}.${k}`, sort[k] === 'ascend' ? 'ASC' : 'DESC');
             }
         }
 
