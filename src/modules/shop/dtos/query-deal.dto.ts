@@ -59,6 +59,15 @@ export class QueryDealDto extends ListQueryDto {
     @IsOptional()
     isTop?: boolean;
 
+    @ApiPropertyOptional({
+        description: '是否已过期',
+        type: Boolean,
+    })
+    @Transform(({ value }) => tBoolean(value))
+    @IsBoolean()
+    @IsOptional()
+    isExpired?: boolean;
+
     @ApiPropertyOptional({ enum: DealOrderType, description: '商品排序规则' })
     @IsEnum(DealOrderType, {
         message: `order must be one of ${Object.values(DealOrderType).join(',')}`,

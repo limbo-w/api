@@ -23,6 +23,7 @@ import {
 } from '../repositories';
 
 import { StoreRepository } from '../repositories/store.repository';
+import { getTime } from '@/modules/core/helpers';
 
 type FindParams = {
     [key in keyof Omit<QueryDealDto, 'limit' | 'page'>]: QueryDealDto[key];
@@ -112,9 +113,18 @@ export class DealService extends BaseService<DealEntity, DealRepository> {
         options: FindParams,
         callback?: QueryHook<DealEntity>,
     ) {
-        const { category, store, brand, isTop, orderBy, search } = options;
+        const { category, store, brand, isTop, isExpired, orderBy, search } = options;
         let qb = queryBuilder;
         if (typeof isTop === 'boolean') qb.andWhere({ isTop });
+        if (!isNil(isExpired)) {
+            const now = getTime({format: 'YYYY-MM-DD HH:mm'}).toDate();
+            console.log('now', now);
+            if (isExpired) {
+                qb.andWhere('`endedAt` < :now', { now });
+            } else {
+                qb.andWhere('`endedAt` >= :now', { now });
+            }
+        }
         if (!isNil(store))
             qb.andWhere({
                 store,
