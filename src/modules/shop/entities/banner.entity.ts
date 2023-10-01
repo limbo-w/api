@@ -45,6 +45,7 @@ export class BannerEntity extends BaseEntity {
     @Column({ comment: '折扣信息' })
     discountInfo: string;
 
+    @Expose()
     @Column({ comment: "banner's order", default: 0 })
     customOrder!: number;
 
