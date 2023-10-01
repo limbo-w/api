@@ -248,8 +248,8 @@ export abstract class BaseService<
         }
 
         console.log(options);
-        const sort = JSON.parse(options.sort);
-        if (!isNil(sort)) {
+        if (!isNil(options.sort)) {
+            const sort = JSON.parse(options.sort);
             for (let k in sort) {
                 qb.addOrderBy(`${queryName}.${k}`, sort[k] === 'ascend' ? 'ASC' : 'DESC');
             }
