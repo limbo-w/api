@@ -4,7 +4,7 @@ import { IsEnum, IsNumber, IsOptional, Min } from 'class-validator';
 
 import { DtoValidation } from '@/modules/core/decorators';
 import { tNumber } from '@/modules/core/helpers';
-import { OrderType, QueryTrashMode } from '@/modules/database/constants';
+import { AntdSort, OrderType, QueryTrashMode } from '@/modules/database/constants';
 import { IPaginateDto, TrashedDto } from '@/modules/database/types';
 
 @DtoValidation({ type: 'query' })
@@ -53,4 +53,10 @@ export class ListQueryDto implements IPaginateDto, TrashedDto {
     })
     @IsOptional()
     orderByDirection?: OrderType;
+
+    @ApiPropertyOptional({
+        description: 'antd排序',
+    })
+    @IsOptional()
+    antdSort?: AntdSort;
 }

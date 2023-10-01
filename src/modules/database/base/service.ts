@@ -248,6 +248,12 @@ export abstract class BaseService<
         }
 
         console.log(options);
+        console.log(options.sort);
+        if (!isNil(options.sort)) {
+            options.sort.forEach((v: string, k: string) => {
+                qb.addOrderBy(k, v === 'ascend' ? 'ASC' : 'DESC');
+            });
+        }
 
         if (callback) return callback(qb);
         return qb;

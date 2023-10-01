@@ -6,6 +6,15 @@ export enum OrderType {
     DESC = 'DESC',
 }
 
+export enum AntdSortType {
+    ASC = 'ascend',
+    DESC = 'descend',
+}
+
+export interface AntdSort {
+    [key: string]: AntdSortType;
+}
+
 /**
  * @description 传入CustomRepository装饰器的metadata数据标识
  */
