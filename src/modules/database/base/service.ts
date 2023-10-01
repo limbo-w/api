@@ -246,6 +246,9 @@ export abstract class BaseService<
                 qb.where(`${queryName}.deletedAt is not null`);
             }
         }
+
+        console.log(options);
+
         if (callback) return callback(qb);
         return qb;
     }
