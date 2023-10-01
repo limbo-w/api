@@ -257,10 +257,10 @@ export class UserService extends BaseService<UserEntity, UserRepository> impleme
                 permissions: [options.permission],
             });
         }
-        if (!isNil(username)) {
+        if (!isNil(username) && username !== '') {
             qb.andWhere('username = :username', { username });
         }
-        if (!isNil(email)) {
+        if (!isNil(email) && email !== '') {
             qb.andWhere('email = :email', { email });
         }
         if (orderBy) qb.orderBy(`user.${orderBy}`, 'ASC');
