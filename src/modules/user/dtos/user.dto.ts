@@ -141,4 +141,14 @@ export class QueryUserDto extends ListQueryDto {
     })
     @IsEnum(UserOrderType)
     declare orderBy?: UserOrderType;
+
+    @ApiPropertyOptional({
+        description: '用户名',
+    })
+    username?: string;
+
+    @ApiPropertyOptional({
+        description: '邮箱',
+    })
+    email?: string;
 }

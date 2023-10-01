@@ -242,7 +242,7 @@ export class UserService extends BaseService<UserEntity, UserRepository> impleme
         options: QueryUserDto,
         callback?: QueryHook<UserEntity>,
     ) {
-        const { actived, orderBy } = options;
+        const { actived, orderBy, username, email } = options;
         const qb = await super.buildListQuery(queryBuilder, options, callback);
         if (actived !== undefined && typeof actived === 'boolean') {
             qb.andWhere('actived = :actived', { actived });
@@ -256,6 +256,12 @@ export class UserService extends BaseService<UserEntity, UserRepository> impleme
             qb.andWhere('permissions.id IN (:...permissions)', {
                 permissions: [options.permission],
             });
+        }
+        if (!isNil(username)) {
+            qb.andWhere('username = :username', { username });
+        }
+        if (!isNil(email)) {
+            qb.andWhere('email = :email', { email });
         }
         if (orderBy) qb.orderBy(`user.${orderBy}`, 'ASC');
         return qb;
