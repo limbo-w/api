@@ -1,14 +1,20 @@
 import { Injectable, ForbiddenException } from '@nestjs/common';
 
 import { isNil } from 'lodash';
+import { In, SelectQueryBuilder } from 'typeorm';
 import xlsx from 'node-xlsx';
 
 import { getTime } from '@/modules/core/helpers';
 import { BaseService } from '@/modules/database/base';
 
-import { ExportOrderDto } from '../dtos';
+import { ExportOrderDto, QueryDealDto } from '../dtos';
 import { OrderEntity } from '../entities';
 import { OrderRepository } from '../repositories';
+import { QueryHook } from '@/modules/database/types';
+
+type FindParams = {
+    [key in keyof Omit<QueryDealDto, 'limit' | 'page'>]: QueryDealDto[key];
+};
 
 @Injectable()
 export class OrderService extends BaseService<OrderEntity, OrderRepository> {
@@ -56,5 +62,26 @@ export class OrderService extends BaseService<OrderEntity, OrderRepository> {
         const name = getTime().format('YYYYMMDDHHmmss');
         const file = xlsx.build([{ name, data, options: {} }]);
         return { name: `${name}.xlsx`, file };
+    }
+
+    protected async buildListQuery(
+        queryBuilder: SelectQueryBuilder<OrderEntity>,
+        options: FindParams,
+        callback?: QueryHook<OrderEntity>,
+    ) {
+        const { store, brand } = options;
+        let qb = queryBuilder;
+        if (!isNil(store))
+            qb.andWhere({
+                store,
+            });
+
+        if (!isNil(brand))
+            qb.andWhere({
+                brand,
+            });
+
+        if (callback) qb = await callback(qb);
+        return super.buildListQuery(qb, options);
     }
 }
