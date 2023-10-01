@@ -248,9 +248,9 @@ export abstract class BaseService<
         }
 
         console.log(options);
-        console.log(options.sort);
-        if (!isNil(options.sort)) {
-            options.sort.forEach((v: string, k: string) => {
+        const sort = JSON.parse(options.sort);
+        if (!isNil(sort)) {
+            sort.forEach((v: string, k: string) => {
                 qb.addOrderBy(k, v === 'ascend' ? 'ASC' : 'DESC');
             });
         }
