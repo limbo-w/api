@@ -246,8 +246,6 @@ export abstract class BaseService<
                 qb.where(`${queryName}.deletedAt is not null`);
             }
         }
-
-        console.log(options);
         if (!isNil(options.sort)) {
             const sort = JSON.parse(options.sort);
             for (let k in sort) {

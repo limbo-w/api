@@ -118,7 +118,6 @@ export class DealService extends BaseService<DealEntity, DealRepository> {
         if (typeof isTop === 'boolean') qb.andWhere({ isTop });
         if (!isNil(isExpired)) {
             const now = getTime({format: 'YYYY-MM-DD HH:mm'}).toDate();
-            console.log('now', now);
             if (isExpired) {
                 qb.andWhere('`endedAt` < :now', { now });
             } else {
