@@ -1,7 +1,7 @@
 import { Injectable, ForbiddenException } from '@nestjs/common';
 
 import { isNil } from 'lodash';
-import { In, SelectQueryBuilder } from 'typeorm';
+import { SelectQueryBuilder } from 'typeorm';
 import xlsx from 'node-xlsx';
 
 import { getTime } from '@/modules/core/helpers';
