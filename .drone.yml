@@ -16,8 +16,7 @@ steps:
           envs: [ENV_VARS]
           script:
               - 'mkdir -p /home/pincman/htdocs/goflash && cd $_'
-              - '[ -d ./api ] && rm -rf ./api'
-              - GIT_SSH_COMMAND="ssh -o StrictHostKeyChecking=no" git clone -q git@git.3rcd.com:goflash/api.git ./api
+              - GIT_SSH_COMMAND="ssh -o StrictHostKeyChecking=no" git -C ./api pull || git clone -q git@git.3rcd.com:goflash/api.git ./api
               - cd api && echo "$${ENV_VARS}" > .env
               - 'source ~/.zshrc; pnpm i && pnpm build && pm2 restart ecosystem.config.js && pm2 save'
     - name: deploy-prod
@@ -35,6 +34,6 @@ steps:
           script:
               - 'mkdir -p /home/pincman/htdocs/goflash && cd $_'
               - '[ -d ./api ] && rm -rf ./api'
-              - GIT_SSH_COMMAND="ssh -o StrictHostKeyChecking=no" git clone -q git@git.3rcd.com:goflash/api.git ./api
+              - GIT_SSH_COMMAND="ssh -o StrictHostKeyChecking=no" git -C ./api pull || git clone -q git@git.3rcd.com:goflash/api.git ./api
               - cd api && echo "$${ENV_VARS}" > .env
               - 'source ~/.zshrc; pnpm i && pnpm build && pm2 restart ecosystem.config.js && pm2 save'
