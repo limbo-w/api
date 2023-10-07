@@ -13,8 +13,8 @@ import { QueryDealDto } from '../dtos';
 import { DealService } from '../services';
 import { ShopModule } from '../shop.module';
 
-import {SelectQueryBuilder} from 'typeorm';
-import { DealEntity } from '../entities';
+// import {SelectQueryBuilder} from 'typeorm';
+// import { DealEntity } from '../entities';
 
 @ApiTags('商品操作')
 @Depends(ShopModule)
