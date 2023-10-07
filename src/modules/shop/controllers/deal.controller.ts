@@ -35,9 +35,10 @@ export class DealController {
             'limit',
             'search',
         ]);
-        return this.dealService.paginate(options, async (query: SelectQueryBuilder<DealEntity>) => {
-            return query.andWhere('endedAt >= :now', {now: new Date()});
-        });
+        // return this.dealService.paginate(options, async (query: SelectQueryBuilder<DealEntity>) => {
+        //     return query.andWhere('endedAt >= :now', {now: new Date()});
+        // });
+        return this.dealService.paginate(options);
     }
 
     @Patch('favorite/:id')
