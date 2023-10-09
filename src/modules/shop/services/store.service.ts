@@ -45,27 +45,14 @@ export class StoreService extends BaseService<StoreEntity, StoreRepository> {
 
     async update({ id, logo, background, ...data }: ManageUpdateStoreDto) {
         const item = await this.detail(id);
-        if (!isNil(logo)) {
-            if ((!isNil(item.logo) && item.logo.id !== logo) || isNil(item.logo)) {
-                // if (!isNil(item.logo)) await this.mediaRepository.remove(item.logo);
-                const current = await this.mediaRepository.findOneByOrFail({ id: logo });
-                current.deal = await this.repository.findOneByOrFail({ id });
-                await this.mediaRepository.save(current);
-            }
-        }
-        if (!isNil(background)) {
-            if (
-                (!isNil(item.background) && item.background.id !== background) ||
-                isNil(item.background)
-            ) {
-                // if (!isNil(item.background)) await this.mediaRepository.remove(item.background);
-                const current = await this.mediaRepository.findOneByOrFail({ id: background });
-                current.deal = await this.repository.findOneByOrFail({ id });
-                await this.mediaRepository.save(current);
-            }
-        }
         await this.repository.update(id, {
             ...data,
+            logo: !isNil(logo)
+                ? await this.mediaRepository.findOneByOrFail({ id: logo })
+                : item.logo,
+            background: !isNil(background)
+                ? await this.mediaRepository.findOneByOrFail({ id: background })
+                : item.background,
         });
         return this.detail(id);
     }
