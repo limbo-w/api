@@ -4,6 +4,7 @@ import { isNil } from 'lodash';
 import { In, SelectQueryBuilder } from 'typeorm';
 
 import { Configure } from '@/modules/core/configure';
+import { getTime } from '@/modules/core/helpers';
 import { ClassToPlain } from '@/modules/core/types';
 import { BaseService } from '@/modules/database/base';
 import { QueryHook } from '@/modules/database/types';
@@ -23,7 +24,6 @@ import {
 } from '../repositories';
 
 import { StoreRepository } from '../repositories/store.repository';
-import { getTime } from '@/modules/core/helpers';
 
 type FindParams = {
     [key in keyof Omit<QueryDealDto, 'limit' | 'page'>]: QueryDealDto[key];
@@ -117,7 +117,7 @@ export class DealService extends BaseService<DealEntity, DealRepository> {
         let qb = queryBuilder;
         if (typeof isTop === 'boolean') qb.andWhere({ isTop });
         if (!isNil(isExpired)) {
-            const now = getTime({format: 'YYYY-MM-DD HH:mm'}).toDate();
+            const now = getTime({ format: 'YYYY-MM-DD HH:mm' }).toDate();
             if (isExpired) {
                 qb.andWhere('`endedAt` < :now', { now });
             } else {
@@ -161,7 +161,7 @@ export class DealService extends BaseService<DealEntity, DealRepository> {
             default:
                 return query
                     .addOrderBy(`${this.repository.getQBName()}.customOrder`, 'ASC')
-                    .orderBy(`${this.repository.getQBName()}.createdAt`, 'DESC')
+                    .addOrderBy(`${this.repository.getQBName()}.createdAt`, 'DESC')
                     .addOrderBy(`${this.repository.getQBName()}.updatedAt`, 'DESC');
         }
     }
