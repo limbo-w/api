@@ -87,7 +87,6 @@ export class ManageCreateDealDto {
         default: 0,
     })
     @Transform(({ value }) => tNumber(value))
-    @Min(0, { always: true, message: 'order value must exceed 0' })
     @IsNumber(undefined, { always: true })
     @IsOptional({ always: true })
     customOrder = 0;
