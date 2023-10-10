@@ -55,7 +55,10 @@ export class DealService extends BaseService<DealEntity, DealRepository> {
     }
 
     async update({ id, categories, store, brand, image, ...data }: ManageUpdateDealDto) {
-        const item = await this.detail(id);
+        const item = await DealEntity.findOne({
+            where: { id },
+            relations: ['image'],
+        });
         if (!isNil(image)) {
             if ((!isNil(item.image) && item.image.id !== image) || isNil(item.image)) {
                 if (!isNil(item.image)) await this.mediaRepository.remove(item.image);
