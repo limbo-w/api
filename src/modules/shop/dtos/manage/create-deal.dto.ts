@@ -36,8 +36,8 @@ export class ManageCreateDealDto {
     @IsOptional({ groups: ['update'] })
     description!: string;
 
-    @ApiProperty({ description: '商品链接', maxLength: 255 })
-    @MaxLength(255, {
+    @ApiProperty({ description: '商品链接', maxLength: 1000 })
+    @MaxLength(1000, {
         always: true,
         message: 'deal link length cannot exceed $constraint1',
     })
