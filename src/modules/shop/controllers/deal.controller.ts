@@ -41,7 +41,7 @@ export class DealController {
         return this.dealService.paginate(
             options,
             async (subQuery: SelectQueryBuilder<DealEntity>) => {
-                return subQuery.andWhere('deals.show = :show', { show: true });
+                return subQuery.andWhere('deal.show = :show', { show: true });
             },
         );
         // return this.dealService.paginate(options);
