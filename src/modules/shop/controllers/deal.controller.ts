@@ -3,6 +3,8 @@ import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 
 import { pick } from 'lodash';
 
+import { SelectQueryBuilder } from 'typeorm';
+
 import { ClassToPlain } from '@/modules/core/types';
 import { Depends } from '@/modules/restful/decorators';
 import { Guest, ReqUser } from '@/modules/user/decorators';
@@ -10,6 +12,7 @@ import { Guest, ReqUser } from '@/modules/user/decorators';
 import { UserEntity } from '@/modules/user/entities';
 
 import { QueryDealDto } from '../dtos';
+import { DealEntity } from '../entities';
 import { DealService } from '../services';
 import { ShopModule } from '../shop.module';
 
@@ -35,10 +38,13 @@ export class DealController {
             'limit',
             'search',
         ]);
-        // return this.dealService.paginate(options, async (query: SelectQueryBuilder<DealEntity>) => {
-        //     return query.andWhere('endedAt >= :now', {now: new Date()});
-        // });
-        return this.dealService.paginate(options);
+        return this.dealService.paginate(
+            options,
+            async (subQuery: SelectQueryBuilder<DealEntity>) => {
+                return subQuery.andWhere('show = :show', { show: true });
+            },
+        );
+        // return this.dealService.paginate(options);
     }
 
     @Patch('favorite/:id')
