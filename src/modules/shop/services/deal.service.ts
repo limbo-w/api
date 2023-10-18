@@ -116,9 +116,10 @@ export class DealService extends BaseService<DealEntity, DealRepository> {
         options: FindParams,
         callback?: QueryHook<DealEntity>,
     ) {
-        const { category, store, brand, isTop, isExpired, orderBy, search } = options;
+        const { category, store, brand, isTop, isExpired, orderBy, search, show, source } = options;
         let qb = queryBuilder;
         if (typeof isTop === 'boolean') qb.andWhere({ isTop });
+        if (typeof show === 'boolean') qb.andWhere({ show });
         if (!isNil(isExpired)) {
             const now = getTime({ format: 'YYYY-MM-DD HH:mm' }).toDate();
             if (isExpired) {
@@ -144,6 +145,9 @@ export class DealService extends BaseService<DealEntity, DealRepository> {
             qb.andWhere('`title` LIKE :search', { search: `%${search}%` })
                 .orWhere('`description` LIKE :search', { search: `%${search}%` })
                 .orWhere('`brand`.`name` LIKE :search', { search: `%${search}%` });
+        }
+        if (!isNil(source)) {
+            qb.andWhere({ source });
         }
 
         this.queryOrderBy(qb, orderBy);

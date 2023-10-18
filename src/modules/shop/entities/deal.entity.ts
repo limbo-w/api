@@ -71,6 +71,14 @@ export class DealEntity extends BaseEntity {
     endedAt!: Date;
 
     @Expose()
+    @Column({ comment: '来源' })
+    source: string;
+
+    @Expose()
+    @Column({ type: 'boolean', comment: '是否展示', default: true })
+    show: boolean;
+
+    @Expose()
     isExpired: boolean;
 
     @Expose()

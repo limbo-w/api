@@ -74,4 +74,19 @@ export class QueryDealDto extends ListQueryDto {
     })
     @IsOptional()
     declare orderBy?: DealOrderType;
+
+    @ApiPropertyOptional({
+        description: '过滤是否展示的数据',
+        type: Boolean,
+    })
+    @Transform(({ value }) => tBoolean(value))
+    @IsBoolean()
+    @IsOptional()
+    show?: boolean;
+
+    @ApiPropertyOptional({
+        description: '搜索爬虫来源',
+    })
+    @IsOptional()
+    source?: string;
 }

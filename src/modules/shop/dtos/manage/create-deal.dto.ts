@@ -137,4 +137,14 @@ export class ManageCreateDealDto {
     @IsNotEmpty({ groups: ['create'], message: 'image cannot be empty' })
     @IsOptional({ groups: ['update'] })
     image!: string;
+
+    @ApiProperty({ description: '爬虫来源' })
+    @IsOptional()
+    source?: string;
+
+    @ApiPropertyOptional({ description: '是否展示', type: Boolean })
+    @Transform(({ value }) => tBoolean(value))
+    @IsBoolean()
+    @IsOptional()
+    show?: boolean;
 }
