@@ -185,14 +185,15 @@ export class AuthService {
      * 通过验证码注册
      * @param data
      */
-    async registerByCaptcha(data: CaptchaValidate<{ password?: string }>) {
-        const { value, password } = data;
+    async registerByCaptcha(data: CaptchaValidate<{ password?: string; username?: string }>) {
+        const { value, password, username } = data;
         const expired = await this.checkCodeExpired(data, CaptchaActionType.REGISTER);
         if (expired) {
             throw new BadRequestException('captcha has been expired,cannot used to register');
         }
         const user = new UserEntity();
         if (password) user.password = password;
+        if (username) user.username = username;
         user.actived = true;
         user.email = value;
         // 储存用户

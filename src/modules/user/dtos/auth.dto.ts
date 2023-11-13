@@ -32,7 +32,12 @@ export class RegisterDto extends PickType(GuestDto, [
  * 通过邮件验证码注册
  */
 @DtoValidation({ groups: [CaptchaDtoGroups.EMAIL_REGISTER] })
-export class EmailRegisterDto extends PickType(GuestDto, ['email', 'code'] as const) {}
+export class EmailRegisterDto extends PickType(GuestDto, [
+    'email',
+    'code',
+    'username',
+    'password',
+] as const) {}
 
 /**
  * 通过登录凭证找回密码
