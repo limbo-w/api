@@ -192,7 +192,7 @@ export class AuthService {
             throw new BadRequestException('验证码已过期请重新发送');
         }
         const user = new UserEntity();
-        if (password) user.password = password;
+        if (password) user.password = encrypt(password);
         if (username) user.username = username;
         user.actived = true;
         user.email = value;
