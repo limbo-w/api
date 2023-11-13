@@ -189,7 +189,7 @@ export class AuthService {
         const { value, password, username } = data;
         const expired = await this.checkCodeExpired(data, CaptchaActionType.REGISTER);
         if (expired) {
-            throw new BadRequestException('captcha has been expired,cannot used to register');
+            throw new BadRequestException('验证码已过期请重新发送');
         }
         const user = new UserEntity();
         if (password) user.password = password;
@@ -262,7 +262,7 @@ export class AuthService {
             where: conditional,
         });
         if (!codeItem) {
-            throw new ForbiddenException('captcha code is not incorrect');
+            throw new ForbiddenException('验证码错误');
         }
         const { expired } = getUserConfig<CaptchaTimeOption>(`captcha.time.${action}`);
         return getTime({ date: codeItem.updated_at }).add(expired, 'second').isBefore(getTime());
