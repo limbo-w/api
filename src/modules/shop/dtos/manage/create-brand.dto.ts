@@ -11,7 +11,7 @@ import { BrandEntity } from '../../entities';
 export class ManageCreateBrandDto {
     @ApiProperty({
         description: '品牌名称',
-        maxLength: 25,
+        maxLength: 50,
         uniqueItems: true,
     })
     @IsUnique(
