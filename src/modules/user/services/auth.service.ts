@@ -218,7 +218,7 @@ export class AuthService {
         if (!user) {
             throw new ForbiddenException(error);
         }
-        // user.password = encrypt(password);
+        user.password = encrypt(password);
         await this.userRepository.save(pick(user, ['id', 'password']));
         return this.userService.findOneByCondition({ id: user.id });
     }
