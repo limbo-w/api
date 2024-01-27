@@ -62,7 +62,8 @@ export class UserSubscriber extends BaseSubscriber<UserEntity> {
      */
     async beforeUpdate(event: UpdateEvent<UserEntity>) {
         if (this.isUpdated('password', event)) {
-            event.entity.password = encrypt(event.entity.password);
+            // 自动加密密码(事件触发有异常，暂时直接在UserService哈希处理)
+            // event.entity.password = encrypt(event.entity.password);
         }
         if (event.entity.earned < event.entity.redeemed) {
             event.entity.earned = event.entity.redeemed;
