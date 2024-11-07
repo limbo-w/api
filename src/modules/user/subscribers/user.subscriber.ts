@@ -10,7 +10,6 @@ import { SubcriberSetting } from '@/modules/database/types';
 import { PermissionEntity, RoleEntity } from '@/modules/rbac/entities';
 
 import { UserEntity } from '../entities/user.entity';
-import { encrypt } from '../helpers';
 
 /**
  * 用户模型监听器

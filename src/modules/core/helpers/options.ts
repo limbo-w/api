@@ -39,12 +39,12 @@ export const createQueueOptions = (
     if (!Array.isArray(options)) {
         return {
             ...omit(options, 'redis'),
-            connection: redis.find(({ name: c }) => c === options.redis ?? 'default'),
+            connection: redis.find(({ name: c }) => c === options.redis),
         };
     }
     return options.map(({ name, redis: r }) => ({
         name,
         ...omit(options, 'redis'),
-        connection: redis.find(({ name: c }) => c === r ?? 'default'),
+        connection: redis.find(({ name: c }) => c === r),
     }));
 };

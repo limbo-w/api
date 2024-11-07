@@ -166,7 +166,7 @@ export abstract class BaseService<
      */
     async delete(data: string[], trash?: boolean) {
         let items: E[] = [];
-        if (this.repository instanceof BaseTreeRepository<E>) {
+        if (this.repository instanceof BaseTreeRepository) {
             items = await this.repository.find({
                 where: { id: In(data) } as any,
                 withDeleted: this.enable_trash ? true : undefined,

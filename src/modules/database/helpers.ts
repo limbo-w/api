@@ -70,7 +70,7 @@ export const createDbOptions = (options: DbConfigOptions) => {
         const newOption = { ...connection, entities };
         return deepMerge(
             newOptions.common,
-            { ...newOption, synchronize: false, autoLoadEntities: true } as any,
+            { ...newOption} as any,
             'replace',
         );
     });

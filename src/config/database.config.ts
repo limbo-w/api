@@ -13,7 +13,7 @@ export const database: ConfigureFactory<DbConfigOptions, DbConfig> = {
     register: (configure) => ({
         common: {
             charset: 'utf8mb4',
-            synchronize: false,
+            synchronize: true,
             logging: ['error'],
             // paths: {
             //     migration: resolve(__dirname, '../database/migrations'),
@@ -24,16 +24,16 @@ export const database: ConfigureFactory<DbConfigOptions, DbConfig> = {
                 type: 'mysql',
                 host: '127.0.0.1',
                 port: 3306,
-                username: 'root',
+                username: 'goflash',
                 password: configure.env('DB_PASSWORD', '123456'),
                 database: configure.env('DB_NAME', 'goflash'),
                 // entities: [],
                 // 自动加载模块中注册的entity
-                // autoLoadEntities: true,
+                autoLoadEntities: true,
                 // 可以在webpack热更新时保持连接,目前用不到
                 // keepConnectionAlive: true,
                 // 可以在开发环境下同步entity的数据结构到数据库
-                // synchronize: false,
+                // synchronize: true,
                 seeders: [UserSeeder, ShopSeeder],
                 factories: [UserFactory, DealFactory, OrderFactory],
             },
